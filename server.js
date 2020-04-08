@@ -23,14 +23,37 @@ app.get("/notes", function (req, res) {
 //Will return index.html
 app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "public/index.html"));
+});
 
 app.get("/api/notes", (req, res)=>{
     // reads the JSON file
     fs.readFile("db/db.json", "utf8", (err, data)=>{
         //checks for error
         if(err) throw err;
-
-    //parse the JSON file
-    res.json(JSON.parse(data))
+      //parse the JSON file
+     res.json(JSON.parse(data))
     });
+});
+
+//sets up the API POST route
+app.post("/api/notes", (req, res) =>{
+    fs.readFile("db/db.json", "utf8", (err, data)=>{
+        //check for error
+        if(err) throw err;
+        //will parse the data and save to a local variable
+        var returnedData = JSON.parse(data)
+        const newNote = req.body;
+        //set up the id
+        req.body.id = returnedData.length + 1;
+        //push user data into the file
+        returnedData.push(newNote)
+        //changes JSON into string
+        returnedData = JSON.stringify(returnedData);
+        //writes a new JSON file
+        fs.writeFile("db/db.json", returnedData, "utf8", (err)=>{
+            //check for error
+            if(err) throw err;
+        })
+        return res.json(data);
+    })
 });
