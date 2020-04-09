@@ -41,16 +41,15 @@ app.post("/api/notes", (req, res) =>{
         //check for error
         if(err) throw err;
         //will parse the data and save to a local variable
-        var returnedData = JSON.parse(data)
+        let returnedData = JSON.parse(data)
         const newNote = req.body;
         //set up the id
-        req.body.id = returnedData.length + 1;
+        newNote.id = (returnedData.length + 1)
         //push user data into the file
         returnedData.push(newNote)
-        //changes JSON into string
-        returnedData = JSON.stringify(returnedData);
+        console.log(returnedData)
         //writes a new JSON file
-        fs.writeFile("db/db.json", returnedData, "utf8", (err)=>{
+        fs.writeFile("db/db.json", JSON.stringify(returnedData), "utf8", (err)=>{
             //check for error
             if(err) throw err;
         })
@@ -59,19 +58,17 @@ app.post("/api/notes", (req, res) =>{
 });
 
 //sets up the API delete route
-app.delete("/api/notes/:id", (req, res)=>{
+app.delete("/api/notes/:id", (req, res)=> {
     //reads the json file
     fs.readFile("db/db.json", "utf8", (err,data)=>{
         //check for error
         if(err) throw err;
         //will parse the data and save to a local variable
-        var returnedData = JSON.parse(data);
+        let returnedData = JSON.parse(data);
         //filter deleted notes
-        returnedData = returnedData.filter(deleted => parseInt(req.params.id) !== deleted.id)
-        //stringify the file
-        returnedData = json.stringify(returnedData);
+        returnedData = returnedData.filter(note=>note.id !== req.params.id)
         //writes a new file
-        fs.writeFile("db/db.json", returnedData, "utf8", (err)=>{
+        fs.writeFile("db/db.json", JSON.stringify(returnedData), "utf8", (err)=>{
             //checks for error
             if(err) throw err;
         })
