@@ -43,7 +43,6 @@ app.post("/api/notes", (req, res) =>{
         newNote.id = (returnedData.length + 1)
         //push user data into the file
         returnedData.push(newNote)
-        console.log(returnedData)
         //writes a new JSON file
         fs.writeFile("db/db.json", JSON.stringify(returnedData), "utf8", (err)=>{
             //check for error
@@ -61,8 +60,9 @@ app.delete("/api/notes/:id", (req, res)=> {
         if(err) throw err;
         //will parse the data and save to a local variable
         let returnedData = JSON.parse(data);
+        var par = req.params.id;
         //filter deleted notes
-        returnedData = returnedData.filter(note=>note.id !== req.params.id)
+        returnedData = returnedData.filter((returnedData)=> returnedData.id != par)
         //writes a new file
         fs.writeFile("db/db.json", JSON.stringify(returnedData), "utf8", (err)=>{
             //checks for error
