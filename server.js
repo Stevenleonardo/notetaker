@@ -20,10 +20,6 @@ app.use(express.static("public"));
 app.get("/notes", function (req, res) {
     res.sendFile(path.join(__dirname, "public/notes.html"));
 });
-//Will return index.html
-app.get("*", function (req, res) {
-    res.sendFile(path.join(__dirname, "public/index.html"));
-});
 
 app.get("/api/notes", (req, res)=>{
     // reads the JSON file
@@ -75,6 +71,10 @@ app.delete("/api/notes/:id", (req, res)=> {
         return res.json(data)
     })
 })
+//Will return index.html
+app.get("*", function (req, res) {
+    res.sendFile(path.join(__dirname, "public/index.html"));
+});
 
 //listens
 app.listen(PORT, ()=>{
