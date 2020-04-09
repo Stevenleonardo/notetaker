@@ -55,5 +55,31 @@ app.post("/api/notes", (req, res) =>{
             if(err) throw err;
         })
         return res.json(data);
-    })
+    }) 
 });
+
+//sets up the API delete route
+app.delete("/api/notes/:id", (req, res)=>{
+    //reads the json file
+    fs.readFile("db/db.json", "utf8", (err,data)=>{
+        //check for error
+        if(err) throw err;
+        //will parse the data and save to a local variable
+        var returnedData = JSON.parse(data);
+        //filter deleted notes
+        returnedData = returnedData.filter(deleted => parseInt(req.params.id) !== deleted.id)
+        //stringify the file
+        returnedData = json.stringify(returnedData);
+        //writes a new file
+        fs.writeFile("db/db.json", returnedData, "utf8", (err)=>{
+            //checks for error
+            if(err) throw err;
+        })
+        return res.json(data)
+    })
+})
+
+//listens
+app.listen(PORT, ()=>{
+    console.log("listening on PORT" + PORT)
+})
